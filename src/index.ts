@@ -8,7 +8,7 @@ interface Prop {
   type: string;
 }
 
-const generateContextCode = (contextName: string, props: Prop[]) => {
+const generateContextCode = (contextName: string, props: Prop[], filePath: string) => {
   const propsInterface = `interface ${contextName}Props {
 ${props.map(({ name, type }) => `  ${name}: ${type};`).join("\n")}
 }`;
@@ -44,7 +44,6 @@ export const use${contextName} = (): ${contextName}ContextType => {
 `;
 
   const fileName = `${contextName}Context.tsx`;
-  const filePath = path.join(process.cwd(), fileName);
   fs.writeFileSync(filePath, code, "utf8");
   console.log(`${fileName} generated at ${filePath}`);
 };
@@ -63,6 +62,12 @@ const argv = yargs(hideBin(process.argv))
     description: "Comma-separated list of props in the format name:type",
     demandOption: true,
   })
+  .option("path", {
+    alias: "pa",
+    type: "string",
+    description: "Path to the file",
+    demandOption: true,
+  })
   .help()
   .alias("help", "h").argv;
 
@@ -72,5 +77,6 @@ const props: Prop[] = args.props.split(",").map((prop: string) => {
   const [name, type] = prop.split(":");
   return { name, type };
 });
+const filePath: string = args.path;
 
-generateContextCode(contextName, props);
+generateContextCode(contextName, props, filePath);
