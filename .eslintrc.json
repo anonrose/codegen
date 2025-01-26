@@ -1,0 +1,8 @@
+{
+	"plugins": [
+			"unused-imports",
+			"@typescript-eslint",
+			"import",
+			"no-relative-import-paths"
+	]
+}
